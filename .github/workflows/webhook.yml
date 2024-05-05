@@ -1,9 +1,11 @@
 name: Trigger Workflow with www-form-urlencoded Data
 
 on:
-  webhook:
-    secrets:
-      - MY_WEBHOOK_SECRET
+  workflow_dispatch:
+    inputs:
+      flutterPrjZip:
+        description: 'flutterPrjZip'
+        required: true
 
 jobs:
   process_form_data:
@@ -15,7 +17,6 @@ jobs:
           dispatch: true
         env:
           flutterPrjZip: ${{ github.event.inputs.flutterPrjZip }}
-          userId: ${{ github.event.inputs.userId }}
 
       - name: Process Unzip Data
         run: |
@@ -61,4 +62,3 @@ jobs:
 
       - name: Remove Artifacts
         run: rm -rf my_prj flutter_build.zip
-
