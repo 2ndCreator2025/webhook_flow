@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: .github/workflows/webhook2.yml
+      - uses: /.github/workflows/webhook2.yml
 
         with:
           ref: ${{ github.event.client_payload.ref }}
