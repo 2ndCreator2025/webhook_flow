@@ -10,3 +10,11 @@ jobs:
         with:
           ref: ${{ github.event.client_payload.ref }}
       - run: echo ${{ github.event.client_payload.sha }}
+
+      - name: Trigger Repository Dispatch
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github.everest-preview+json" \
+            -H "Authorization: token YOUR_PAT" \
+            -d '{"event_type": "my-event2", "client_payload": {"ref": "refs/heads/main", "sha": "your_commit_sha_here"}}' \
+            https://api.github.com/repos/username/my-repo/dispatches

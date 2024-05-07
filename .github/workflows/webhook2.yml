@@ -1,0 +1,12 @@
+name: My Event 2 Workflow
+on:
+  repository_dispatch:
+    types: [my-event2]
+
+jobs:
+  myJob:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - run: "echo \"Event payload: ${{ toJson(github.event.client_payload) }}\""
