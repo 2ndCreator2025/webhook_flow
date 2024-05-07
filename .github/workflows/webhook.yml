@@ -1,57 +1,17 @@
-name: Trigger Workflow with www-form-urlencoded Data
+name: Test Dispatch
+on: workflow_dispatch
 
-on:
-  workflow_dispatch:
-    inputs:
-      flutterPrjZip:
-        description: 'flutterPrjZip'
-        required: true
+permissions:
+  pull-requests: write
+  contents: write
 
 jobs:
-  process_form_data:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - name: Process Unzip Data
-        run: |
-          # Unzip the Flutter project
-          unzip ${{ github.event.inputs.flutterPrjZip }} -d my_prj
-
-      - name: Install Flutter
-        run: |
-          # Clone the Flutter repository if not already present
-          if [ ! -d "flutter" ]; then
-            git clone https://github.com/flutter/flutter.git
-          fi
-
-      - name: Navigate to Flutter Directory
-        run: cd flutter
-
-      - name: List Directory Contents
-        run: ls
-
-      - name: Check Flutter Doctor
-        run: flutter/bin/flutter doctor
-
-      - name: Clean Flutter
-        run: flutter/bin/flutter clean
-
-      - name: Enable Web
-        run: flutter/bin/flutter config --enable-web
-
-      - name: Build Flutter Web
-        run: flutter/bin/flutter build web --web-renderer canvaskit --release
-
-      - name: Navigate Back to Repository Root
-        run: cd ..
-
-      - name: Pack the Build
-        run: zip -r flutter_build.zip my_prj/build/web
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Test repository dispatch
+        uses: peter-evans/repository-dispatch@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/web
-
-      - name: Remove Artifacts
-        run: rm -rf my_prj flutter_build.zip
+          # token: ${{ secrets.PUBLIC_REPO_SCOPED_TOKEN }}
+          event-type: tests
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
