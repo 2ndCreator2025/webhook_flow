@@ -1,17 +1,12 @@
-name: Test Dispatch
-on: workflow_dispatch
-
-permissions:
-  pull-requests: write
-  contents: write
-
+name: Repository Dispatch
+on:
+  repository_dispatch:
+    types: [my-event]
 jobs:
-  test:
+  myEvent:
     runs-on: ubuntu-latest
     steps:
-      - name: Test repository dispatch
-        uses: peter-evans/repository-dispatch@v3
+      - uses: actions/checkout@v3
         with:
-          # token: ${{ secrets.PUBLIC_REPO_SCOPED_TOKEN }}
-          event-type: tests
-          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+          ref: ${{ github.event.client_payload.ref }}
+      - run: echo ${{ github.event.client_payload.sha }}
